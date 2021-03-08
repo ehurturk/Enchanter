@@ -29,19 +29,19 @@ public class StartCommand implements CommandExecutor {
     public boolean onCommand(CommandSender send, Command cmd, String s, String[] args) {
 
         if (cmd.getName().equalsIgnoreCase("enchanter")) {
-            send.getServer().broadcastMessage("Enchanter Plugin made by ehurturk");
+            Bukkit.getServer().broadcastMessage("Enchanter Plugin made by ehurturk");
         }
         else {
             return false;
         }
-        Bukkit.broadcastMessage(ChatColor.GREEN + "Enchanter plugin is now enabled.");
+        Bukkit.getServer().broadcastMessage(ChatColor.GREEN + "Enchanter plugin is now enabled.");
 
         Player[] players = getPlayers(args);
 
 
         BukkitScheduler sched = send.getServer().getScheduler();
 
-        send.getServer().broadcastMessage("Game is starting...");
+        Bukkit.getServer().broadcastMessage("Game is starting...");
 
         task1 = sched.scheduleSyncRepeatingTask(this.plugin, new Runnable() {
             int num = 10;
@@ -58,16 +58,17 @@ public class StartCommand implements CommandExecutor {
             }}, 20L, 20L); // countdown scheduler
 
         task2 = sched.scheduleSyncRepeatingTask(this.plugin, new Runnable() {
-            int num = 20;
+
             @Override
             public void run() {
-                if (num == 0) {
-                    // add an enchantment to a random item in player inventory
-                    addEnchantments(players);
-                    Bukkit.getScheduler().cancelTask(task2); //close the task
-                }
-                else {
-                    send.getServer().broadcastMessage("Enchanting in: "+ num--);
+                for (int j = 20; j >=0; j--) {
+                    if (j == 0) {
+                        // add an enchantment to a random item in player inventory
+                        addEnchantments(players);
+                        Bukkit.getScheduler().cancelTask(task2); //close the task
+                    } else {
+                        Bukkit.getServer().broadcastMessage("Enchanting in: " + j);
+                    }
                 }
             }
         }, 1220L, 1200L);
@@ -95,7 +96,7 @@ public class StartCommand implements CommandExecutor {
             int rItem = rand.nextInt(pInventory.length);
             int rEnchantment = rand.nextInt(allEnchants.length);
             int rLevel = rand.nextInt(maxEnchantLevel);
-
+            Bukkit.getServer().broadcastMessage("Enchanting Item: "+ pInventory[rItem].toString() + " Enchanting: " + allEnchants[rEnchantment].toString());
             pInventory[rItem].addEnchantment(allEnchants[rEnchantment], rLevel);
 
         }
