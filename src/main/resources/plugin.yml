@@ -1,0 +1,8 @@
+name: Enchanter
+version: ${project.version}
+main: me.ehurturk.enchanter.main.Main
+api-version: 1.16
+authors: [ Ehurturk ]
+description: Enchant plugin that would give enchants to your items
+commands:
+  enchanter:
