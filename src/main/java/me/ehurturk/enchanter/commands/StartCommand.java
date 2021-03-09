@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class StartCommand implements CommandExecutor {
 
@@ -57,19 +58,26 @@ public class StartCommand implements CommandExecutor {
                 }
             }}, 20L, 20L); // countdown scheduler
 
-        task2 = sched.scheduleSyncRepeatingTask(this.plugin, new Runnable() {
+        sched.scheduleSyncRepeatingTask(this.plugin, new Runnable() {
 
             @Override
             public void run() {
-                for (int j = 20; j >=0; j--) {
-                    if (j == 0) {
-                        // add an enchantment to a random item in player inventory
-                        addEnchantments(players);
-                        Bukkit.getScheduler().cancelTask(task2); //close the task
-                    } else {
-                        Bukkit.getServer().broadcastMessage("Enchanting in: " + j);
+                task2 = sched.scheduleSyncRepeatingTask(plugin, new Runnable() {
+
+                    int num = 10;
+
+                    @Override
+                    public void run() {
+                        if (num==0) {
+                            // add an enchantment to a random item in player inventory
+                            addEnchantments(players);
+                        }
+                        else {
+                            Bukkit.getServer().broadcastMessage(ChatColor.BOLD + "" + ChatColor.YELLOW + "Enchanting in "+num--);
+                            Bukkit.getScheduler().cancelTask(task2);
+                        }
                     }
-                }
+                }, 0L, 20L); // countdown scheduler
             }
         }, 1220L, 1200L);
 
@@ -92,12 +100,16 @@ public class StartCommand implements CommandExecutor {
         int maxEnchantLevel = 10;
 
         for (Player p: players) {
-            ItemStack[] pInventory = p.getInventory().getExtraContents();
+            ItemStack[] pInventory = p.getInventory().getStorageContents(); // ind items may be null
             int rItem = rand.nextInt(pInventory.length);
             int rEnchantment = rand.nextInt(allEnchants.length);
             int rLevel = rand.nextInt(maxEnchantLevel);
             Bukkit.getServer().broadcastMessage("Enchanting Item: "+ pInventory[rItem].toString() + " Enchanting: " + allEnchants[rEnchantment].toString());
-            pInventory[rItem].addEnchantment(allEnchants[rEnchantment], rLevel);
+            ItemStack item;
+            do {
+                item = pInventory[rItem];
+            } while(item == null);
+            item.addUnsafeEnchantment(allEnchants[rEnchantment], rLevel); // pInventory[rItem] is null??
 
         }
     }
