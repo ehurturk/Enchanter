@@ -116,6 +116,9 @@ public class StartCommand implements CommandExecutor {
                     inventory.add(item);
                 }
             }
+            if (inventory.size() == 0) {
+                continue;
+            }
             int rItem = rand.nextInt(inventory.size());
             ItemStack item = inventory.get(rItem);
 
