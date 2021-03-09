@@ -71,10 +71,12 @@ public class StartCommand implements CommandExecutor {
                         if (num==0) {
                             // add an enchantment to a random item in player inventory
                             addEnchantments(players);
+                            Bukkit.getScheduler().cancelTask(task2);
                         }
                         else {
                             Bukkit.getServer().broadcastMessage(ChatColor.BOLD + "" + ChatColor.YELLOW + "Enchanting in "+num--);
-                            Bukkit.getScheduler().cancelTask(task2);
+
+
                         }
                     }
                 }, 0L, 20L); // countdown scheduler
