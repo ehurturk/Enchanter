@@ -3,6 +3,7 @@ package me.ehurturk.enchanter.commands;
 import me.ehurturk.enchanter.main.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -102,15 +104,23 @@ public class StartCommand implements CommandExecutor {
         int maxEnchantLevel = 10;
 
         for (Player p: players) {
-            ItemStack[] pInventory = p.getInventory().getStorageContents(); // ind items may be null
-            int rItem = rand.nextInt(pInventory.length);
+            ItemStack[] pInventory = p.getInventory().getContents(); // ind items may be null
+
             int rEnchantment = rand.nextInt(allEnchants.length);
             int rLevel = rand.nextInt(maxEnchantLevel);
-            Bukkit.getServer().broadcastMessage("Enchanting Item: "+ pInventory[rItem].toString() + " Enchanting: " + allEnchants[rEnchantment].toString());
-            ItemStack item;
-            do {
-                item = pInventory[rItem];
-            } while(item == null);
+            Bukkit.getServer().broadcastMessage("Enchanting now!");
+            ArrayList<ItemStack> inventory = new ArrayList<>();
+            for (ItemStack item: pInventory)
+            {
+                if (item != null) {
+                    inventory.add(item);
+                }
+            }
+            int rItem = rand.nextInt(inventory.size());
+            ItemStack item = inventory.get(rItem);
+
+            Bukkit.getServer().broadcastMessage("Enchanting Item: "+ item.toString() + " Enchanting: " + allEnchants[rEnchantment].toString());
+
             item.addUnsafeEnchantment(allEnchants[rEnchantment], rLevel); // pInventory[rItem] is null??
 
         }
