@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -39,7 +40,7 @@ public class StartCommand implements CommandExecutor {
         }
         Bukkit.getServer().broadcastMessage(ChatColor.GREEN + "Enchanter plugin is now enabled.");
 
-        Player[] players = getPlayers(args);
+        List<Player> players = getPlayers();
 
 
         BukkitScheduler sched = send.getServer().getScheduler();
@@ -88,17 +89,18 @@ public class StartCommand implements CommandExecutor {
         return true;
     }
 
-    private Player[] getPlayers(String[] args) {
-        Player[] players = new Player[args.length];
+    private List<Player> getPlayers() {
+        List<Player> players = new ArrayList<>();
 
-        for (int i = 0; i < args.length; i++) {
-            players[i] = Bukkit.getServer().getPlayer(args[i]); // assign each name in args to playerArray
+        for (Player all: Bukkit.getServer().getOnlinePlayers()) {
+            players.add(all);
         }
+
 
         return players;
     }
 
-    private void addEnchantments(Player[] players) {
+    private void addEnchantments(List<Player> players) {
 
         Enchantment[] allEnchants = Enchantment.values();
         int maxEnchantLevel = 10;
@@ -122,7 +124,6 @@ public class StartCommand implements CommandExecutor {
             int rItem = rand.nextInt(inventory.size());
             ItemStack item = inventory.get(rItem);
 
-            Bukkit.getServer().broadcastMessage("Enchanting Item: "+ item.toString() + " Enchanting: " + allEnchants[rEnchantment].toString());
 
             item.addUnsafeEnchantment(allEnchants[rEnchantment], rLevel); // pInventory[rItem] is null??
 

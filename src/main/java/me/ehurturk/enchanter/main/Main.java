@@ -1,5 +1,6 @@
 package me.ehurturk.enchanter.main;
 
+import me.ehurturk.enchanter.commands.EndCommand;
 import me.ehurturk.enchanter.commands.StartCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,6 +14,7 @@ public final class Main extends JavaPlugin {
 
         Bukkit.getServer().broadcastMessage(ChatColor.GREEN + "Enchanter has initialized...");
         new StartCommand(this);
+        new EndCommand(this);
     }
 
     @Override
